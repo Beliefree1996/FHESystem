@@ -42,7 +42,15 @@
             <span>当前授权额度</span>
           </div>
           <el-row>
-
+            <el-card style="margin-top:20px; margin-bottom: 20px">
+              <el-tag
+                style="margin-left:45%"
+                :key="quota"
+                type="success"
+                effect="dark">
+                {{ quota }}元
+              </el-tag>
+            </el-card>
           </el-row>
         </el-card>
       </el-col>
@@ -65,6 +73,7 @@
         mp3: '',
         audio: '',
         name: '',
+        quota: 10000,
         news: [
           {id: 1, tittle: '新闻1', img_src: '/apis/static/image/1.jpg'},
           {id: 2, tittle: '新闻2', img_src: '/apis/static/image/2.jpg'},
