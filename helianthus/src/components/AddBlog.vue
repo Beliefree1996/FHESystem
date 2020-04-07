@@ -6,12 +6,12 @@
 
     <el-form v-if="!issubmitd" :rules="rules" ref="blog" :model="blog" v-show="!loading" fade>
 
-      <el-form-item label="Blog标题" prop="title" required>
+      <el-form-item label="公告主题" prop="title" required>
         <el-input type="text" v-model="blog.title" placeholder="博客标题" clearable></el-input>
       </el-form-item>
 
 
-      <el-form-item label="Blog内容" prop="content" required>
+      <el-form-item label="公告内容" prop="content" required>
         <el-input type="textarea" v-model="blog.content" placeholder="博客内容"
                   :autosize="{ minRows: 8, maxRows: 20 }"></el-input>
       </el-form-item>
@@ -28,7 +28,7 @@
           </el-col>
 
           <el-col :span="12">
-            <el-form-item label="作者" prop="author" required>
+            <el-form-item label="发布者" prop="author" required>
               <el-select v-model="blog.author" placeholder="请选择">
                 <el-option :value="users"></el-option>
               </el-select>

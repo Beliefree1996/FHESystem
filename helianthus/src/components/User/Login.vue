@@ -1,5 +1,5 @@
 <template>
-    <div id="Login" v-loading="false" style="margin: 0 auto">
+    <div id="Login" v-loading="false" style="margin: 10% 0">
         <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
           <el-form ref="FormDatas" :model="FormDatas" label-width="80px" :rules="rules">
             <el-form-item label="用户名" prop="username">

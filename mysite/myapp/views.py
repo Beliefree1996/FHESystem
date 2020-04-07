@@ -295,6 +295,8 @@ class Users:
                 return JsonResponse({
                     "status": 2,  # 登陆未认证
                     "id": str(request.user.id),
+                    "is_superuser": User.objects.get(id=request.user.id).is_superuser,
+                    "is_staff": User.objects.get(id=request.user.id).is_staff,
                     "username": str(request.user),
                     "email": str(request.user.email)
                 })
@@ -302,6 +304,8 @@ class Users:
                 return JsonResponse({
                     "status": 0,  # 登陆且认证
                     "id": str(request.user.id),
+                    "is_superuser": User.objects.get(id=request.user.id).is_superuser,
+                    "is_staff": User.objects.get(id=request.user.id).is_staff,
                     "username": str(request.user),
                     "email": str(request.user.email)
                 })

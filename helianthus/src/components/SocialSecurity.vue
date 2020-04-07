@@ -20,7 +20,7 @@
         <Status></Status>
         <el-card style="min-height: 200px; max-height: 300px; ">
           <div slot="header">
-            <span>近半年公积金及社保变化</span>
+            <span>查询个人公积金月缴额及社保缴费基数</span>
           </div>
           <el-row>
             <div class="block">

@@ -5,20 +5,25 @@
       <el-header>
         <el-col :xs="24" :sm="24">
           <el-menu :default-active="$route.path" class="el-menu-vertical-demo" mode="horizontal" router>
-            <el-menu-item class="hidden-sm-and-down"><img src="./assets/logo.png" style="width: 30px; height: 30px;">
+            <el-menu-item class="hidden-sm-and-down"><img src="./assets/logo.jpg" style="width: 30px; height: 30px;">
+              <span v-if="identity===0">客户端</span>
+              <span v-else-if="identity===1">企业端</span>
+              <span v-else-if="identity===2">政府端</span>
             </el-menu-item>
             <el-menu-item index="/"><i class="el-icon-house"></i><span class="hidden-sm-and-down">首页</span>
             </el-menu-item>
-            <el-menu-item index="/usermanage"><i class="el-icon-set-up"></i><span class="hidden-sm-and-down">用户管理</span>
+            <el-menu-item index="/usermanage" v-if="identity===1"><i class="el-icon-set-up"></i><span class="hidden-sm-and-down">用户管理</span>
             </el-menu-item>
-            <el-menu-item index="/socialsecurity"><i class="el-icon-money"></i><span
+            <el-menu-item index="" v-if="identity===1"><i class="el-icon-guide"></i><span class="hidden-sm-and-down">风控模型管理</span>
+            </el-menu-item>
+            <el-menu-item index="/socialsecurity" v-if="identity===0"><i class="el-icon-money"></i><span
               class="hidden-sm-and-down">个人社保</span></el-menu-item>
-            <el-menu-item index="/addblog" class="hidden-sm-and-down"><i class="el-icon-edit"></i><span
+            <el-menu-item index="/addblog" class="hidden-sm-and-down" v-if="identity!==0"><i class="el-icon-edit"></i><span
               class="hidden-sm-and-down">添加公告</span></el-menu-item>
-            <el-menu-item index="/bloglist"><i class="el-icon-tickets"></i><span class="hidden-sm-and-down">公告</span>
+            <el-menu-item index="/bloglist" v-if="identity===0"><i class="el-icon-tickets"></i><span class="hidden-sm-and-down">公告</span>
             </el-menu-item>
-            <el-menu-item index="/uploaddata"><i class="el-icon-document-add"></i><span
-              class="hidden-sm-and-down">上传工资信息</span></el-menu-item>
+            <el-menu-item index="/uploaddata" v-if="identity===2"><i class="el-icon-document-add"></i><span
+              class="hidden-sm-and-down">上传信息</span></el-menu-item>
             <el-submenu index="1">
               <template slot="title"><i class="el-icon-user"></i><span class="hidden-sm-and-down">个人中心</span></template>
               <div>
@@ -65,6 +70,7 @@
     name: 'App',
     data() {
       return {
+        identity: 0,
         tag_type: 'success',
         tag_label: '已认证',
         loading: true,
@@ -103,6 +109,13 @@
           if (response.data.status !== 1) {
             this.islogin = true
             this.username = response.data.username
+            if (response.data.is_superuser) {
+              this.identity = 2
+            } else {
+              if (response.data.is_staff) {
+                this.identity = 1
+              }
+            }
             if (response.data.status === 2) {
               this.tag_type = 'danger'
               this.tag_label = '未认证'
