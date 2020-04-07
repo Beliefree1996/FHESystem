@@ -80,7 +80,6 @@
           })
       },
       changeActive(data) {
-        console.log(data.id)
         this.$axios.get('apis/change_data?change_active=true&user_id=' + data.id)
           .then(response => {
             if (response.data.status_code === 0) {

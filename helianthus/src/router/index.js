@@ -3,7 +3,7 @@ import Router from 'vue-router'
 
 import Home from '@/components/Home'
 import SocialSecurity from '@/components/SocialSecurity'
-import UserManage from  '@/components/Usermanage'
+import UserManage from '@/components/UserManage'
 import AddBlog from '@/components/AddBlog'
 import About from '@/components/About'
 import BlogList from '@/components/BlogList'
@@ -26,6 +26,6 @@ export default new Router({
     {path: '/uploaddata', name: 'UploadData', component: UploadData},   // 上传工资表
     {path: '/user/login', name: 'Login', component: Login},   // 登录
     {path: '/user/register', name: 'Register', component: Register},   // 注册
-    {path: '/user/root', name: 'ROOT', component: ROOT},   // 注册
+    {path: '/user/root', name: 'ROOT', component: ROOT},   // 个人信息
   ]
 })

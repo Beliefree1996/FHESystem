@@ -176,6 +176,8 @@ def change_data(request):
     if request.method == "GET":
         change_active = request.GET.get("change_active")
         user_id = request.GET.get("user_id")
+        certification = request.GET.get("certification")
+        IC_num = request.GET.get("IC_num")
         # 更改锁定状态
         if change_active is not None and change_active == "true" and user_id is not None:
             db_data = User.objects.get(id=user_id)
@@ -183,6 +185,15 @@ def change_data(request):
                 db_data.is_active = 0
             else:
                 db_data.is_active = 1
+            db_data.save()
+            return JsonResponse({
+                "status_code": 0,
+            })
+
+        # 认证，身份证绑定
+        if certification is not None and certification == "true" and user_id is not None and IC_num is not None:
+            db_data = UserIC.objects.get(user_id=user_id)
+            db_data.IC_num = IC_num
             db_data.save()
             return JsonResponse({
                 "status_code": 0,
@@ -280,7 +291,7 @@ class Users:
     def get_status(request):
         if request.user.is_authenticated:
             user_ic = UserIC.objects.get(user_id=request.user.id)
-            if user_ic.IC_num is None:
+            if user_ic.IC_num == "":
                 return JsonResponse({
                     "status": 2,  # 登陆未认证
                     "id": str(request.user.id),

@@ -25,7 +25,14 @@
                 <el-menu-item index="/user/login" v-if="!islogin">登陆</el-menu-item>
                 <el-menu-item index="/user/register" v-if="!islogin">注册</el-menu-item>
                 <div v-else>
-                  <el-menu-item index="/user/root">{{ username }}</el-menu-item>
+                  <el-menu-item index="/user/root">{{ username }}
+                    <el-tag
+                      size="small"
+                      :type="tag_type"
+                      effect="dark">
+                      {{ tag_label }}
+                    </el-tag>
+                  </el-menu-item>
                   <el-menu-item @click="logout">退出</el-menu-item>
                 </div>
 
@@ -58,6 +65,8 @@
     name: 'App',
     data() {
       return {
+        tag_type: 'success',
+        tag_label: '已认证',
         loading: true,
         num: null,
         islogin: false,
@@ -94,6 +103,10 @@
           if (response.data.status !== 1) {
             this.islogin = true
             this.username = response.data.username
+            if (response.data.status === 2) {
+              this.tag_type = 'danger'
+              this.tag_label = '未认证'
+            }
           }
         })
 

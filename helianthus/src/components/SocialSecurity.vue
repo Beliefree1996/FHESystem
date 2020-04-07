@@ -46,6 +46,19 @@
       </el-col>
     </el-row>
 
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      close-on-click-modal="false"
+      show-close="false"
+      width="30%">
+      <span>您还未认证</span>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="goHome">取 消</el-button>
+    <el-button type="primary" @click="goCertification">前往认证</el-button>
+  </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -71,6 +84,8 @@
       return {
         // 是否登录
         isLogin: false,
+        // 是否认证
+        dialogVisible: false,
         show_wage: false,
         userId: '',
         dataArr: [],
@@ -83,6 +98,12 @@
       }
     },
     methods: {
+      goHome() {
+        this.$router.push({path: '/'})
+      },
+      goCertification() {
+        this.$router.push({path: '/user/root'})
+      },
       getData() {
         this.$axios.get('apis/get_info?wage=true&user_id=' + this.userId)
           .then(response => {
@@ -150,6 +171,9 @@
           if (response.data.status === 1) {
             this.$router.push({path: '/user/login'})
           } else {
+            if (response.data.status === 2) {
+              this.dialogVisible = true
+            }
             this.isLogin = true
             this.userId = response.data.id
             this.getData()
