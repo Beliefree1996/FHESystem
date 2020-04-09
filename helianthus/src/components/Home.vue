@@ -19,34 +19,36 @@
       </el-carousel>
     </div>
     <el-row :gutter="10">
-<!--      <el-col :xs="24" :xl="12" :lg="12" :sm="24" :md="12">-->
-<!--        <el-card style="min-height: 200px; max-height: 400px; ">-->
-<!--          <div slot="header">-->
-<!--            <span v-show="playm">正在播放: {{ name }}</span>-->
-<!--            <span v-show="!playm">点击下列音乐进行播放</span>-->
-<!--          </div>-->
-<!--          <audio :src="audio" autoplay loop></audio>-->
-<!--          <div style="overflow: auto; height: 200px; width: 100%;">-->
-<!--            <ul style="list-style: none">-->
-<!--              <li v-for="m in mp3.data">-->
-<!--                <el-link type="primany" @click="play(m.url, m.name)" style="margin: 10px">{{ m.name }}</el-link>-->
-<!--              </li>-->
-<!--            </ul>-->
-<!--          </div>-->
-<!--        </el-card>-->
-<!--      </el-col>-->
+      <!--      <el-col :xs="24" :xl="12" :lg="12" :sm="24" :md="12">-->
+      <!--        <el-card style="min-height: 200px; max-height: 400px; ">-->
+      <!--          <div slot="header">-->
+      <!--            <span v-show="playm">正在播放: {{ name }}</span>-->
+      <!--            <span v-show="!playm">点击下列音乐进行播放</span>-->
+      <!--          </div>-->
+      <!--          <audio :src="audio" autoplay loop></audio>-->
+      <!--          <div style="overflow: auto; height: 200px; width: 100%;">-->
+      <!--            <ul style="list-style: none">-->
+      <!--              <li v-for="m in mp3.data">-->
+      <!--                <el-link type="primany" @click="play(m.url, m.name)" style="margin: 10px">{{ m.name }}</el-link>-->
+      <!--              </li>-->
+      <!--            </ul>-->
+      <!--          </div>-->
+      <!--        </el-card>-->
+      <!--      </el-col>-->
       <el-col :xs="24" :xl="12" :lg="12" :sm="24" :md="12">
-        <el-card style="min-height: 180px; max-height: 400px; ">
+        <el-card style="min-height: 180px; max-height: 400px">
           <div slot="header">
             <span>最新公告</span>
-            <i class="el-icon-more" style="margin-left: 555px"></i>
+            <div style="cursor:pointer; display: inline-block">
+              <i class="el-icon-more" style="margin-left: 555px" onclick="window.location.href='/bloglist'"></i>
+            </div>
           </div>
           <div style="overflow: auto; height: 200px; width: 100%;">
-            <li style="font-size: 90%">新品发售</li>
-            <li style="font-size: 90%; margin-top: 5px">系统维护通知</li>
-            <li style="font-size: 90%; margin-top: 5px">央行再度“降息”</li>
-            <li style="font-size: 90%; margin-top: 5px">系统升级通知</li>
-            <li style="font-size: 90%; margin-top: 5px">放假通知</li>
+            <li style="font-size: 90%; margin-top: 5px" v-for="dat in blogList" :key="dat.title">{{dat.title}}</li>
+            <!--            <li style="font-size: 90%; margin-top: 5px">系统维护通知</li>-->
+            <!--            <li style="font-size: 90%; margin-top: 5px">央行再度“降息”</li>-->
+            <!--            <li style="font-size: 90%; margin-top: 5px">系统升级通知</li>-->
+            <!--            <li style="font-size: 90%; margin-top: 5px">放假通知</li>-->
           </div>
 
         </el-card>
@@ -86,6 +88,7 @@
     data() {
       return {
         playm: false,
+        blogList: null,
         mp3: '',
         audio: '',
         name: '',
@@ -112,6 +115,14 @@
       //   }, error => {
       //     console.log('mp3 error')
       //   })
+      this.$http.get("apis/get_info?blog_list=true&aa=60&kk=6")
+        // this.$http.get("apis/get_info?wage=true&aa=60&kk=6")
+        .then(response => {
+          this.blogList = response.data.data;
+          this.loading = false
+        }, error => {
+          console.log("获取bloglist出错了.");
+        });
       fetch("apis/get_info?mp3=yep", {
         method: "get",
       })
