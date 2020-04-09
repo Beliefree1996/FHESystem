@@ -7,32 +7,48 @@
     <!--        <h1 style="text-align: right">相逢的人会再相逢。</h1>-->
     <!--      </div>-->
     <!--    </div>-->
-    <div class="block">
+    <div style="height: 100%; width: 100%">
       <span class="demonstration"></span>
-      <el-carousel style="height: 300px; width: 100%">
+      <el-carousel style="height: 100%; width: 100%">
         <el-carousel-item v-for="item in news" :key="item.id">
           <!--        <h3 class="small">{{ item.tittle }}</h3>-->
-          <div style="height: 300px; width: auto">
+          <div style="height: 100%; width: auto">
             <img :src="item.img_src">
           </div>
         </el-carousel-item>
       </el-carousel>
     </div>
     <el-row :gutter="10">
+<!--      <el-col :xs="24" :xl="12" :lg="12" :sm="24" :md="12">-->
+<!--        <el-card style="min-height: 200px; max-height: 400px; ">-->
+<!--          <div slot="header">-->
+<!--            <span v-show="playm">正在播放: {{ name }}</span>-->
+<!--            <span v-show="!playm">点击下列音乐进行播放</span>-->
+<!--          </div>-->
+<!--          <audio :src="audio" autoplay loop></audio>-->
+<!--          <div style="overflow: auto; height: 200px; width: 100%;">-->
+<!--            <ul style="list-style: none">-->
+<!--              <li v-for="m in mp3.data">-->
+<!--                <el-link type="primany" @click="play(m.url, m.name)" style="margin: 10px">{{ m.name }}</el-link>-->
+<!--              </li>-->
+<!--            </ul>-->
+<!--          </div>-->
+<!--        </el-card>-->
+<!--      </el-col>-->
       <el-col :xs="24" :xl="12" :lg="12" :sm="24" :md="12">
-        <el-card style="min-height: 200px; max-height: 400px; ">
+        <el-card style="min-height: 180px; max-height: 400px; ">
           <div slot="header">
-            <span v-show="playm">正在播放: {{ name }}</span>
-            <span v-show="!playm">点击下列音乐进行播放</span>
+            <span>最新公告</span>
+            <i class="el-icon-more" style="margin-left: 555px"></i>
           </div>
-          <audio :src="audio" autoplay loop></audio>
           <div style="overflow: auto; height: 200px; width: 100%;">
-            <ul style="list-style: none">
-              <li v-for="m in mp3.data">
-                <el-link type="primany" @click="play(m.url, m.name)" style="margin: 10px">{{ m.name }}</el-link>
-              </li>
-            </ul>
+            <li style="font-size: 90%">新品发售</li>
+            <li style="font-size: 90%; margin-top: 5px">系统维护通知</li>
+            <li style="font-size: 90%; margin-top: 5px">央行再度“降息”</li>
+            <li style="font-size: 90%; margin-top: 5px">系统升级通知</li>
+            <li style="font-size: 90%; margin-top: 5px">放假通知</li>
           </div>
+
         </el-card>
       </el-col>
 

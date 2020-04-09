@@ -1,6 +1,11 @@
 <template>
   <div class="UserManage">
-    <el-card style="min-height: 100%; max-height: 800px; ">
+    <el-row>
+      <h3></h3>
+      <el-input v-model="input" placeholder="请输入用户名" style="width: 160px"></el-input>
+      <el-button type="primary" round style="margin-left: 20px">搜索</el-button>
+    </el-row>
+    <el-card style="min-height: 100%; max-height: 800px; margin-top: 20px">
       <el-table
         :data="tableData"
         style="width: 100%">
@@ -38,6 +43,14 @@
         </el-table-column>
       </el-table>
     </el-card>
+    <!--页码条-->
+    <el-col :span="24" class="toolbar" style="position: absolute; right: 100px; bottom: 60px">
+      <el-pagination style="float:right;"
+                     background
+                     layout="prev, pager, next"
+                     :total="10">
+      </el-pagination>
+    </el-col>
   </div>
 </template>
 
@@ -56,7 +69,8 @@
     name: 'UserManage',
     data() {
       return {
-        tableData: []
+        tableData: [],
+        input: '',
       }
     },
     created() {
