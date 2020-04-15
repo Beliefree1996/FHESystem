@@ -37,6 +37,7 @@ def get_info(request):
         get_wage = request.GET.get("wage")
         get_date = request.GET.get("date")
         get_user_detail = request.GET.get("user_detail")
+        get_username = request.GET.get("username")
 
         # 获取分类列表
         if cateory_list is not None and cateory_list == "1ds2ppJu2I9dl1":
@@ -117,7 +118,10 @@ def get_info(request):
 
         # 获取用户详细信息
         if get_user_detail is not None and get_user_detail == "true":
-            db_data = User.objects.filter(is_superuser=0)
+            if get_username is not None:
+                db_data = User.objects.filter(is_superuser=0).filter(username__contains=get_username)
+            else:
+                db_data = User.objects.filter(is_superuser=0)
             data = [
                 {
                     "id": i.id,

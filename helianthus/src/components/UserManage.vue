@@ -3,7 +3,7 @@
     <el-row>
       <h3></h3>
       <el-input v-model="input" placeholder="请输入用户名" style="width: 160px"></el-input>
-      <el-button type="primary" round style="margin-left: 20px">搜索</el-button>
+      <el-button type="primary" round style="margin-left: 20px" @click="inquiry()">搜索</el-button>
     </el-row>
     <el-card style="min-height: 100%; max-height: 800px; margin-top: 20px">
       <el-table
@@ -77,6 +77,22 @@
       this.getData()
     },
     methods: {
+      inquiry() {
+        this.$axios.get('apis/get_info?user_detail=true&username=' + this.input)
+          .then(response => {
+            if (response.data.status_code === 0) {
+              this.tableData = response.data.data
+              for (let i = 0; i < this.tableData.length; i++) {
+                if (!this.tableData[i]['IC_num']) {
+                  this.tableData[i]['IC_num'] = "未绑定"
+                }
+              }
+              console.log(this.tableData)
+            } else {
+              this.$message.error("网络错误！")
+            }
+          })
+      },
       getData() {
         this.$axios.get('apis/get_info?user_detail=true')
           .then(response => {
