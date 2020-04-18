@@ -6,7 +6,7 @@
         <div style="float: right; font-size: 5px"> {{ dat.time }} -- {{ dat.user }}</div>
       </div>
       <div>
-        <span style="font-size: 10px">{{ dat.content }}</span>
+        <span class="content-style">{{ dat.content }}</span>
       </div>
     </el-card>
     <!--页码条-->
@@ -14,8 +14,9 @@
       <el-pagination style="float:right;"
                      background
                      layout="prev, pager, next"
-                     page-size="5"
-                     :total="11">
+                     @current-change="handleCurrentChange"
+                     :page-size="pageSize"
+                     :total="totalPage">
       </el-pagination>
     </el-col>
   </div>
@@ -27,19 +28,32 @@
     data() {
       return {
         blogList: null,
-        loading: true
-
+        loading: true,
+        page: 1,
+        totalPage: 100,
+        pageSize: 5,
       }
     },
     created() {
-      this.$http.get("apis/get_info?blog_list=true&aa=60&kk=6")
-        // this.$http.get("apis/get_info?wage=true&aa=60&kk=6")
-        .then(response => {
-          this.blogList = response.data.data;
-          this.loading = false
-        }, error => {
-          console.log("获取bloglist出错了.");
-        });
+      this.getData()
+    },
+    methods: {
+      getData() {
+        this.$http.get("apis/get_info?blog_list=true&page=" + this.page)
+          // this.$http.get("apis/get_info?wage=true&aa=60&kk=6")
+          .then(response => {
+            this.blogList = response.data.data
+            this.totalPage = response.data.total
+            this.loading = false
+          }, error => {
+            console.log("获取bloglist出错了.");
+          });
+      },
+      // 点击页码
+      handleCurrentChange(val) {
+        this.page = val;
+        this.getData();
+      },
     }
   }
 </script>
@@ -60,6 +74,15 @@
   .card-header-text span {
     font-size: 9px;
     color: #909399;
+  }
+
+  .content-style {
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
   }
 
 </style>

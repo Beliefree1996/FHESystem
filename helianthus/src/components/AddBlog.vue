@@ -56,7 +56,7 @@
 
     <div v-else>
       <el-alert
-        title="大成功～"
+        title="发布成功"
         type="success"
         show-icon>
       </el-alert>

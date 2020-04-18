@@ -20,7 +20,7 @@
               class="hidden-sm-and-down">个人社保</span></el-menu-item>
             <el-menu-item index="/addblog" class="hidden-sm-and-down" v-if="identity!==0"><i class="el-icon-edit"></i><span
               class="hidden-sm-and-down">添加公告</span></el-menu-item>
-            <el-menu-item index="/bloglist" v-if="identity===0"><i class="el-icon-tickets"></i><span class="hidden-sm-and-down">公告</span>
+            <el-menu-item index="/bloglist"><i class="el-icon-tickets"></i><span class="hidden-sm-and-down">公告</span>
             </el-menu-item>
             <el-menu-item index="/uploaddata" v-if="identity===2"><i class="el-icon-document-add"></i><span
               class="hidden-sm-and-down">上传信息</span></el-menu-item>

@@ -48,7 +48,9 @@
       <el-pagination style="float:right;"
                      background
                      layout="prev, pager, next"
-                     :total="10">
+                     @current-change="handleCurrentChange"
+                     :page-size="pageSize"
+                     :total="totalPage">
       </el-pagination>
     </el-col>
   </div>
@@ -71,6 +73,9 @@
       return {
         tableData: [],
         input: '',
+        page: 1,
+        totalPage: 100,
+        pageSize: 5,
       }
     },
     created() {
@@ -94,10 +99,11 @@
           })
       },
       getData() {
-        this.$axios.get('apis/get_info?user_detail=true')
+        this.$axios.get('apis/get_info?user_detail=true&page=' + this.page)
           .then(response => {
             if (response.data.status_code === 0) {
               this.tableData = response.data.data
+              this.totalPage = response.data.total
               for (let i = 0; i < this.tableData.length; i++) {
                 if (!this.tableData[i]['IC_num']) {
                   this.tableData[i]['IC_num'] = "未绑定"
@@ -123,7 +129,12 @@
               this.$message.error("网络错误！")
             }
           })
-      }
+      },
+      // 点击页码
+      handleCurrentChange(val) {
+        this.page = val;
+        this.getData();
+      },
       // tableRowClassName({row, IC_num}) {
       //   if (IC_num === "未绑定") {
       //     return 'warning-row';

@@ -39,12 +39,15 @@
         <el-card style="min-height: 180px; max-height: 400px">
           <div slot="header">
             <span>最新公告</span>
-            <div style="cursor:pointer; display: inline-block">
-              <i class="el-icon-more" style="margin-left: 555px" onclick="window.location.href='/bloglist'"></i>
+            <div style="cursor:pointer; display: inline-block; float: right">
+              <i class="el-icon-more" onclick="window.location.href='/bloglist'"></i>
             </div>
           </div>
           <div style="overflow: auto; height: 200px; width: 100%;">
-            <li style="font-size: 90%; margin-top: 5px" v-for="dat in blogList" :key="dat.title">{{dat.title}}</li>
+            <li style="font-size: 90%; margin-top: 5px" v-for="dat in blogList">
+              <span>{{dat.title}}</span>
+              <span style="float: right">{{dat.time}}</span>
+            </li>
             <!--            <li style="font-size: 90%; margin-top: 5px">系统维护通知</li>-->
             <!--            <li style="font-size: 90%; margin-top: 5px">央行再度“降息”</li>-->
             <!--            <li style="font-size: 90%; margin-top: 5px">系统升级通知</li>-->

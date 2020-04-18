@@ -30,6 +30,7 @@ def get_info(request):
         user_id = request.GET.get("user_id")
         cateory_list = request.GET.get("cateory")
         user_list = request.GET.get("users")
+        get_page_arr = request.GET.get("page")
         get_access_num = request.GET.get("num")
         get_blog_list = request.GET.get("blog_list")
         get_mp3 = request.GET.get("mp3")
@@ -38,6 +39,14 @@ def get_info(request):
         get_date = request.GET.get("date")
         get_user_detail = request.GET.get("user_detail")
         get_username = request.GET.get("username")
+
+        if get_page_arr is not None:
+            get_page = int(get_page_arr)
+        else:
+            get_page = 1
+        pagesize = 5
+        start = (get_page - 1) * pagesize
+        end = get_page * pagesize
 
         # 获取分类列表
         if cateory_list is not None and cateory_list == "1ds2ppJu2I9dl1":
@@ -59,6 +68,7 @@ def get_info(request):
                 "num": int(db.number)
             })
 
+        # 获取公告列表
         if get_blog_list is not None and get_blog_list == "true":
             db = Content.objects.all()
             data = [
@@ -69,10 +79,11 @@ def get_info(request):
                     "user": i.user.username,
                     "time": i.time
                 }
-                for i in db]
+                for i in db[start:end]]
 
             return JsonResponse({
                 "status_code": 0,
+                "total": len(db),
                 "data": data
             })
 
@@ -133,9 +144,10 @@ def get_info(request):
                     "last_login": i.last_login,
                     "IC_num": UserIC.objects.get(user_id=i.id).IC_num
                 }
-                for i in db_data]
+                for i in db_data[start:end]]
             return JsonResponse({
                 "status_code": 0,
+                "total": len(db_data),
                 "data": data
             })
 
@@ -175,6 +187,7 @@ def get_info(request):
             "error": "not data"
         })
 
+
 #
 def change_data(request):
     if request.method == "GET":
@@ -202,6 +215,7 @@ def change_data(request):
             return JsonResponse({
                 "status_code": 0,
             })
+
 
 # /apis/add
 def add_data(request):
