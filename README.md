@@ -16,3 +16,9 @@ npm run build
 
 # Backend Django project run command
 python3 manage.py runserver 127.0.0.1:8000
+
+# Test account
+Client user: guest
+Business users: admin
+Government users: Beliefree
+Password is always 123456

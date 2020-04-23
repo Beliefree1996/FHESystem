@@ -6,13 +6,13 @@
 
     <el-form v-if="!issubmitd" :rules="rules" ref="blog" :model="blog" v-show="!loading" fade>
 
-      <el-form-item label="公告主题" prop="title" required>
-        <el-input type="text" v-model="blog.title" placeholder="博客标题" clearable></el-input>
+      <el-form-item label="公告标题" prop="title" required>
+        <el-input type="text" v-model="blog.title" placeholder="公告标题" clearable></el-input>
       </el-form-item>
 
 
       <el-form-item label="公告内容" prop="content" required>
-        <el-input type="textarea" v-model="blog.content" placeholder="博客内容"
+        <el-input type="textarea" v-model="blog.content" placeholder="公告内容"
                   :autosize="{ minRows: 8, maxRows: 20 }"></el-input>
       </el-form-item>
 
