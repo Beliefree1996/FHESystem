@@ -8,6 +8,7 @@ import AddBlog from '@/components/AddBlog'
 import About from '@/components/About'
 import BlogList from '@/components/BlogList'
 import UploadData from '@/components/UploadData'
+import Manage from '@/components/Manage'
 import Login from '@/components/User/Login'
 import Register from '@/components/User/Register'
 import ROOT from '@/components/User/ROOT'
@@ -21,6 +22,7 @@ export default new Router({
     {path: '/socialsecurity', name: 'SocialSecurity', component: SocialSecurity},  // 个人社保信息
     {path: '/usermanage', name: 'UserManage', component: UserManage},
     {path: '/addblog', name: 'AddBlog', component: AddBlog},   // 添加blog
+    {path: '/manage', name: 'Manage', component: Manage},   // 风控模型管理
     {path: '/about', name: 'About', component: About},   // 关于
     {path: '/bloglist', name: 'BlogList', component: BlogList},  // 显示blog信息
     {path: '/uploaddata', name: 'UploadData', component: UploadData},   // 上传工资表
