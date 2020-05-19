@@ -12,7 +12,7 @@
         <el-row>
           <el-card style="margin-top:20px; margin-bottom: 20px">
             <el-button type="primary">点击更新</el-button>
-            <font size="2" color="red">更新后需重新为用户授权，请谨慎！</font>
+            <font size="2" color="red">建议定期更新！</font>
           </el-card>
         </el-row>
       </el-card>

@@ -4,12 +4,12 @@
       <el-button type="success" size="small" icon="el-icon-download">
         <a href="/apis/static/file/demo.xlsx" style="color: #fff;text-decoration: none">下载示例</a>
       </el-button>
-      , 由于网络原因，请耐心等待识别完毕.
+      , 由于网络原因，请耐心等待上传完毕.
     </h3>
     <el-upload
       class="upload-demo"
       action="apis/face"
-      accept="image/jpeg,image/gif,image/png"
+      accept="word/xls,word/xlsx"
       :before-upload="checkUpload"
       :show-file-list="true"
       :on-success="successUpload"
@@ -47,7 +47,7 @@
         this.upload = false
       },
       checkUpload: function (file) {
-        const isIMAGE = file.type === 'image/jpeg' || 'image/png';
+        const isIMAGE = file.type === 'word/xls' || 'word/xlsx';
         const isLt5M = file.size / 5200 / 1024 < 1;
 
         if (!isIMAGE) {
