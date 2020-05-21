@@ -4,6 +4,7 @@ from .models import Cateory, Content, GetNum, Wage, UserIC
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 # from django.utils.six import BytesIO
+import requests
 import json
 import time
 import os
@@ -100,35 +101,12 @@ def get_info(request):
                 })
             else:
                 if get_date is not None:
-                    db_data = Wage.objects.filter(IC_num=user_ic.IC_num, date=get_date)
-                    data = [
-                        {
-                            "id": i.id,
-                            "date": i.date,
-                            "pf": i.pf,
-                            "ss": i.ss,
-                        }
-                        for i in db_data]
-
-                    return JsonResponse({
-                        "status_code": 0,
-                        "data": data
-                    })
+                    url = "http://127.0.0.1:8020/opens/get_info?wage=true&user_id=" + user_id + "&date=" + get_date
                 else:
-                    db_data = Wage.objects.filter(IC_num=user_ic.IC_num).order_by("date").reverse()[:6]
-                    data = [
-                        {
-                            "id": i.id,
-                            "date": i.date,
-                            "pf": i.pf,
-                            "ss": i.ss,
-                        }
-                        for i in db_data]
-
-                    return JsonResponse({
-                        "status_code": 0,
-                        "data": data
-                    })
+                    url = "http://127.0.0.1:8020/opens/get_info?wage=true&user_id=" + user_id
+                data = requests.get(url)
+                result = json.loads(data.text)
+                return JsonResponse(result)
 
         # 获取用户详细信息
         if get_user_detail is not None and get_user_detail == "true":

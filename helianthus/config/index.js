@@ -18,18 +18,18 @@ module.exports = {
           '^/apis': ''
         }
       },
-      '/apis1': { // 企业端服务器接口
-        target: 'http://127.0.0.1:8010/apis1/',   //设置你调用的接口域名和端口号 别忘了加http，就是后台服务地址
+      '/enter': { // 企业端服务器接口
+        target: 'http://127.0.0.1:8010/enter/',   //设置你调用的接口域名和端口号 别忘了加http，就是后台服务地址
         changeOrigin: true,
         pathRewrite: {
-          '^/apis1': ''
+          '^/enter': ''
         }
       },
-      '/apis2': { // 政府端服务器接口
-        target: 'http://127.0.0.1:8020/apis2/',   //设置你调用的接口域名和端口号 别忘了加http，就是后台服务地址
+      '/opens': { // 政府端服务器接口
+        target: 'http://127.0.0.1:8020/opens/',   //设置你调用的接口域名和端口号 别忘了加http，就是后台服务地址
         changeOrigin: true,
         pathRewrite: {
-          '^/apis2': ''
+          '^/opens': ''
         }
       },
     },

@@ -21,12 +21,12 @@ from myapp import views
 urlpatterns = [
     # path('', views.index),
     path('admin/', admin.site.urls),
-    path('apis/get_info', views.get_info),  # 提供数据接口
-    path('apis/add', views.add_data),  # 添加数据
-    path('apis/change_data', views.change_data),    # 修改数据
-    path('apis/face', views.checkface),  # 人脸识别api
-    path('apis/user/getstatus', views.Users.get_status),  # 返回状态 是否登录
-    path('apis/user/login', views.Users.login_user),  # 登录
-    path('apis/user/logout', views.Users.logout_user),  # 注销
-    path('apis/user/register', views.Users.register),   # 注册
+    path('enter/get_info', views.get_info),  # 提供数据接口
+    path('enter/add', views.add_data),  # 添加数据
+    path('enter/change_data', views.change_data),    # 修改数据
+    path('enter/face', views.checkface),  # 人脸识别api
+    path('enter/user/getstatus', views.Users.get_status),  # 返回状态 是否登录
+    path('enter/user/login', views.Users.login_user),  # 登录
+    path('enter/user/logout', views.Users.logout_user),  # 注销
+    path('enter/user/register', views.Users.register),   # 注册
 ]

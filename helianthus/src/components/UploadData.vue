@@ -19,7 +19,7 @@
     </el-upload>
 
     <div v-show="showdiv">
-      识别出了: {{ resultImage.count }}个人脸
+      识别出了: {{ resultImage.count }}条数据
       <img :src="'data:text/html; base64,' +  resultImage.imgbase " alt="" style="width: 100%">
     </div>
 

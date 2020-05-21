@@ -93,42 +93,23 @@ def get_info(request):
         # 查询工资
         if get_wage is not None and get_wage == "true" and user_id is not None:
             user_ic = UserIC.objects.get(user_id=user_id)
-            if user_ic.IC_num is None:
-                return JsonResponse({
-                    "status_code": 2,
-                    "data": "未认证"
-                })
+            if get_date is not None:
+                db_data = Wage.objects.filter(IC_num=user_ic.IC_num, date=get_date)
             else:
-                if get_date is not None:
-                    db_data = Wage.objects.filter(IC_num=user_ic.IC_num, date=get_date)
-                    data = [
-                        {
-                            "id": i.id,
-                            "date": i.date,
-                            "pf": i.pf,
-                            "ss": i.ss,
-                        }
-                        for i in db_data]
+                db_data = Wage.objects.filter(IC_num=user_ic.IC_num).order_by("date").reverse()[:6]
+            data = [
+                {
+                    "id": i.id,
+                    "date": i.date,
+                    "pf": i.pf,
+                    "ss": i.ss,
+                }
+                for i in db_data]
 
-                    return JsonResponse({
-                        "status_code": 0,
-                        "data": data
-                    })
-                else:
-                    db_data = Wage.objects.filter(IC_num=user_ic.IC_num).order_by("date").reverse()[:6]
-                    data = [
-                        {
-                            "id": i.id,
-                            "date": i.date,
-                            "pf": i.pf,
-                            "ss": i.ss,
-                        }
-                        for i in db_data]
-
-                    return JsonResponse({
-                        "status_code": 0,
-                        "data": data
-                    })
+            return JsonResponse({
+                "status_code": 0,
+                "data": data
+            })
 
         # 获取用户详细信息
         if get_user_detail is not None and get_user_detail == "true":
