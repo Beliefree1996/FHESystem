@@ -67,3 +67,18 @@ class UserIC(models.Model):
 
     class Meta:
         verbose_name_plural = "用户身份信息"
+
+class HLPPrivatecKey(models.Model):
+    id = models.AutoField(primary_key=True)
+    Deta = models.TextField()
+    A = models.TextField()
+    B = models.TextField()
+    N = models.IntegerField()
+    mods = models.IntegerField()
+    q = models.IntegerField()
+
+    def __str__(self):
+        return self.id
+
+    class Meta:
+        verbose_name_plural = "HLP私钥"

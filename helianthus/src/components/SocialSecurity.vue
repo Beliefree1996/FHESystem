@@ -94,7 +94,8 @@
         wageItem: '',
         taxItem: '',
         lineChartData: lineChartData.socialSecurityData,
-        choose_month: ''
+        choose_month: '',
+        info_timeout: null
       }
     },
     methods: {
@@ -117,6 +118,8 @@
                 monthArr[i] = Arr.substr(0, 4) + "年" + Arr.substr(4, 2) + "月"
                 wageArr[i] = this.dataArr[i]['pf']
                 taxArr[i] = this.dataArr[i]['ss']
+                // console.log(monthArr[i])
+                console.log(wageArr[i])
               }
               lineChartData.socialSecurityData.xAxisData = [monthArr[0], monthArr[1], monthArr[2], monthArr[3], monthArr[4], monthArr[5]]
               lineChartData.socialSecurityData.wageData = [wageArr[0], wageArr[1], wageArr[2], wageArr[3], wageArr[4], wageArr[5]]
@@ -124,6 +127,9 @@
             } else {
               this.$message.error("未查询到您的信息！")
             }
+            // this.info_timeout = setTimeout(function () {
+            //   this.getInformations()
+            // }, 50000)
           })
       },
       // 查询
@@ -179,6 +185,11 @@
             this.getData()
           }
         })
+    },
+    beforeDestroy() {
+      if (this.info_timeout) {
+        clearTimeout(this.info_timeout)
+      }
     }
   }
 </script>

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from .models import Cateory, Content, GetNum, Wage, UserIC
+from .models import HLPPrivatecKey, Cateory, Content, GetNum, Wage, UserIC
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 # from django.utils.six import BytesIO
@@ -13,10 +13,59 @@ import psutil
 import hashlib
 from PIL import Image, ImageDraw
 import base64
+from . import CC_getongtaiN as HLP
+# from . import NCC_getongtai2N
 
 
 # Create your views here.
 
+# 更新私钥
+def renew_HLP_privateKey(request):
+    if request.method == 'POST':    # 当提交表单时
+        # 判断是否传参
+        if request.POST:
+            Deta = request.POST.get('Deta')
+            A = request.POST.get('A')
+            B = request.POST.get('B')
+            N = request.POST.get('N')
+            mods = request.POST.get('mods')
+            q = request.POST.get('q')
+            prk = HLPPrivatecKey(Deta=Deta, A=A, B=B, N=N, mods=mods, q=q)
+            prk.save()
+            return JsonResponse({
+                "status_code": 0,
+                "data": "renew success!"
+            })
+
+# 字符串转二维矩阵
+def strtoM2(str):
+    arr = []
+    count = 0
+    num = 0
+    for i in str:
+        try:
+            num = num * 10 + int(i)
+        except:
+            if i == '[':
+                count += 1
+            elif i == ',':
+                arr.append(num)
+                num = 0
+            pass
+
+    cols = int(len(arr) / count)
+    grid = []
+    cur = []
+    for i in arr:
+        if len(cur) <= cols:
+            cur.append(i)
+        else:
+            grid.append(cur)
+            cur = []
+            cur.append(i)
+    grid.append(cur)
+
+    return grid
 
 # /apis/get_info
 def get_info(request):
@@ -105,8 +154,16 @@ def get_info(request):
                 else:
                     url = "http://127.0.0.1:8020/opens/get_info?wage=true&user_id=" + user_id
                 data = requests.get(url)
-                result = json.loads(data.text)
-                return JsonResponse(result)
+                # result = json.loads(data.text)
+                result = data.json()
+                prk = HLPPrivatecKey.objects.last()
+                for data in result['data']:
+                    data['pf'] = HLP.two_to_long(HLP.lattice_decryption(data['pf'], eval(str(prk.Deta)), eval(str(prk.A)), eval(str(prk.B)), prk.N, prk.mods, prk.q), prk.N)
+                    data['ss'] = HLP.two_to_long(HLP.lattice_decryption(data['ss'], eval(str(prk.Deta)), eval(str(prk.A)), eval(str(prk.B)), prk.N, prk.mods, prk.q), prk.N)
+                return JsonResponse({
+                    "status_code": 0,
+                    "data": result
+                })
 
         # 获取用户详细信息
         if get_user_detail is not None and get_user_detail == "true":
