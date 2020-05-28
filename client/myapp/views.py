@@ -158,8 +158,8 @@ def get_info(request):
                 result = data.json()
                 prk = HLPPrivatecKey.objects.last()
                 for data in result['data']:
-                    data['pf'] = HLP.two_to_long(HLP.lattice_decryption(data['pf'], eval(str(prk.Deta)), eval(str(prk.A)), eval(str(prk.B)), prk.N, prk.mods, prk.q), prk.N)
-                    data['ss'] = HLP.two_to_long(HLP.lattice_decryption(data['ss'], eval(str(prk.Deta)), eval(str(prk.A)), eval(str(prk.B)), prk.N, prk.mods, prk.q), prk.N)
+                    data['pf'] = HLP.two_to_long(HLP.lattice_decryption(data['pf'], eval(str(prk.Deta)), eval(str(prk.A)), eval(str(prk.B)), prk.N, prk.mods, prk.q), prk.N) / 100
+                    data['ss'] = HLP.two_to_long(HLP.lattice_decryption(data['ss'], eval(str(prk.Deta)), eval(str(prk.A)), eval(str(prk.B)), prk.N, prk.mods, prk.q), prk.N) / 100
                 return JsonResponse({
                     "status_code": 0,
                     "data": result

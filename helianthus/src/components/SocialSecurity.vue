@@ -10,7 +10,7 @@
           </div>
           <panel-group @handleSetLineChartData="handleSetLineChartData"/>
 
-          <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+          <el-row v-loading="listLoading" style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
             <line-chart :chart-data="lineChartData"/>
           </el-row>
         </el-card>
@@ -82,6 +82,7 @@
     },
     data() {
       return {
+        listLoading: true,
         // 是否登录
         isLogin: false,
         // 是否认证
@@ -95,7 +96,6 @@
         taxItem: '',
         lineChartData: lineChartData.socialSecurityData,
         choose_month: '',
-        info_timeout: null
       }
     },
     methods: {
@@ -109,7 +109,8 @@
         this.$axios.get('apis/get_info?wage=true&user_id=' + this.userId)
           .then(response => {
             if (response.data.status_code === 0) {
-              this.dataArr = response.data.data
+              this.listLoading = false
+              this.dataArr = response.data.data.data
               let monthArr = new Array(6)
               let wageArr = new Array(6)
               let taxArr = new Array(6)
@@ -118,8 +119,6 @@
                 monthArr[i] = Arr.substr(0, 4) + "年" + Arr.substr(4, 2) + "月"
                 wageArr[i] = this.dataArr[i]['pf']
                 taxArr[i] = this.dataArr[i]['ss']
-                // console.log(monthArr[i])
-                console.log(wageArr[i])
               }
               lineChartData.socialSecurityData.xAxisData = [monthArr[0], monthArr[1], monthArr[2], monthArr[3], monthArr[4], monthArr[5]]
               lineChartData.socialSecurityData.wageData = [wageArr[0], wageArr[1], wageArr[2], wageArr[3], wageArr[4], wageArr[5]]
@@ -127,10 +126,10 @@
             } else {
               this.$message.error("未查询到您的信息！")
             }
-            // this.info_timeout = setTimeout(function () {
-            //   this.getInformations()
-            // }, 50000)
           })
+        // setTimeout(() => {
+        //   this.listLoading = false
+        // }, 20 * 1000)
       },
       // 查询
       inquiry: function () {
@@ -186,11 +185,6 @@
           }
         })
     },
-    beforeDestroy() {
-      if (this.info_timeout) {
-        clearTimeout(this.info_timeout)
-      }
-    }
   }
 </script>
 
