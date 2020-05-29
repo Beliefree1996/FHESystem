@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from .models import HLPPrivatecKey, Cateory, Content, GetNum, Wage, UserIC
+from .models import HLPPrivatecKey, HLP_otherPrivatecKey, PaillierPrivatecKey, Cateory, Content, GetNum, Wage, UserIC
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 # from django.utils.six import BytesIO
@@ -14,14 +14,31 @@ import hashlib
 from PIL import Image, ImageDraw
 import base64
 from . import CC_getongtaiN as HLP
-# from . import NCC_getongtai2N
+from . import NCC_getongtai2N as HLP_other
+from . import paillier
 
 
 # Create your views here.
 
 # 更新私钥
+def renew_Paillier_privateKey(request):
+    if request.method == 'POST':  # 当提交表单时
+        # 判断是否传参
+        if request.POST:
+            g = request.POST.get('g')
+            lamda = request.POST.get('lamda')
+            n = request.POST.get('n')
+            u = request.POST.get('u')
+            prk = PaillierPrivatecKey(g=g, lamda=lamda, n=n, u=u)
+            prk.save()
+            return JsonResponse({
+                "status_code": 0,
+                "data": "renew success!"
+            })
+
+
 def renew_HLP_privateKey(request):
-    if request.method == 'POST':    # 当提交表单时
+    if request.method == 'POST':  # 当提交表单时
         # 判断是否传参
         if request.POST:
             Deta = request.POST.get('Deta')
@@ -37,35 +54,24 @@ def renew_HLP_privateKey(request):
                 "data": "renew success!"
             })
 
-# 字符串转二维矩阵
-def strtoM2(str):
-    arr = []
-    count = 0
-    num = 0
-    for i in str:
-        try:
-            num = num * 10 + int(i)
-        except:
-            if i == '[':
-                count += 1
-            elif i == ',':
-                arr.append(num)
-                num = 0
-            pass
 
-    cols = int(len(arr) / count)
-    grid = []
-    cur = []
-    for i in arr:
-        if len(cur) <= cols:
-            cur.append(i)
-        else:
-            grid.append(cur)
-            cur = []
-            cur.append(i)
-    grid.append(cur)
+def renew_HLP_other_privateKey(request):
+    if request.method == 'POST':  # 当提交表单时
+        # 判断是否传参
+        if request.POST:
+            Deta = request.POST.get('Deta')
+            A = request.POST.get('A')
+            B = request.POST.get('B')
+            N = request.POST.get('N')
+            mods = request.POST.get('mods')
+            q = request.POST.get('q')
+            prk = HLP_otherPrivatecKey(Deta=Deta, A=A, B=B, N=N, mods=mods, q=q)
+            prk.save()
+            return JsonResponse({
+                "status_code": 0,
+                "data": "renew success!"
+            })
 
-    return grid
 
 # /apis/get_info
 def get_info(request):
@@ -89,8 +95,6 @@ def get_info(request):
         get_date = request.GET.get("date")
         get_user_detail = request.GET.get("user_detail")
         get_username = request.GET.get("username")
-
-
 
         # 页码
         if get_page_arr is not None:
@@ -156,10 +160,29 @@ def get_info(request):
                 data = requests.get(url)
                 # result = json.loads(data.text)
                 result = data.json()
-                prk = HLPPrivatecKey.objects.last()
-                for data in result['data']:
-                    data['pf'] = HLP.two_to_long(HLP.lattice_decryption(data['pf'], eval(str(prk.Deta)), eval(str(prk.A)), eval(str(prk.B)), prk.N, prk.mods, prk.q), prk.N) / 100
-                    data['ss'] = HLP.two_to_long(HLP.lattice_decryption(data['ss'], eval(str(prk.Deta)), eval(str(prk.A)), eval(str(prk.B)), prk.N, prk.mods, prk.q), prk.N) / 100
+                if result['enalg'] == 1:
+                    prk = PaillierPrivatecKey.objects.last()
+                    for data in result['data']:
+                        data['pf'] = paillier.paillier_decryption(data['pf'], int(prk.g), int(prk.lamda), int(prk.n), int(prk.u)) / 100
+                        data['ss'] = paillier.paillier_decryption(data['ss'], int(prk.g), int(prk.lamda), int(prk.n), int(prk.u)) / 100
+                elif result['enalg'] == 2:
+                    prk = HLPPrivatecKey.objects.last()
+                    for data in result['data']:
+                        data['pf'] = HLP.two_to_long(
+                            HLP.lattice_decryption(data['pf'], eval(str(prk.Deta)), eval(str(prk.A)), eval(str(prk.B)),
+                                                   prk.N, prk.mods, prk.q), prk.N) / 100
+                        data['ss'] = HLP.two_to_long(
+                            HLP.lattice_decryption(data['ss'], eval(str(prk.Deta)), eval(str(prk.A)), eval(str(prk.B)),
+                                                   prk.N, prk.mods, prk.q), prk.N) / 100
+                elif result['enalg'] == 3:
+                    prk = HLP_otherPrivatecKey.objects.last()
+                    for data in result['data']:
+                        data['pf'] = HLP_other.two_to_long(
+                            HLP_other.lattice_decryption(data['pf'], eval(str(prk.Deta)), eval(str(prk.A)), eval(str(prk.B)),
+                                                   prk.N, prk.mods, prk.q), prk.N) / 100
+                        data['ss'] = HLP_other.two_to_long(
+                            HLP_other.lattice_decryption(data['ss'], eval(str(prk.Deta)), eval(str(prk.A)), eval(str(prk.B)),
+                                                   prk.N, prk.mods, prk.q), prk.N) / 100
                 return JsonResponse({
                     "status_code": 0,
                     "data": result

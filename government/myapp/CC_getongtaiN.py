@@ -394,81 +394,81 @@ def jiemijinwei(plaintext,r):#用来对最后的计算向量进行进位的
             jinwei = 0
     return plaintext
 
-if __name__ == "__main__":
-    N, l, Mhard, Msoft, random_numbers, p, Deta, A, B, q, n, sigema_max, l_0, sigma, r = key_generartion()#密钥生成
-    #N,l,Mhard,Msoft,random_numbers,p是公钥
-    # Deta, A, B, N, q是私钥
-
-    #print("q=",q)
-    #print("sigma=",p-q*r*(2*l+1))
-    #print("l_0=", l_0)
-
-
-
-    # 数据输入测试模块
-    plaintextnum1 = 263087#420
-    plaintextnum2 = 9871
-    plaintextnum3 = 101
-    plaintextnum4 = 592
-
-    plaintext1 = long_to_two(plaintextnum1,N)
-    plaintext2 = long_to_two(plaintextnum2,N)
-    plaintext3 = long_to_two(plaintextnum3,N)
-    plaintext4 = long_to_two(plaintextnum4,N)
-    print('++++++++++公钥++++++++++')
-    print('密钥N', N)
-    print('密钥Mhard', Mhard)
-    print('密钥Msoft', Msoft)
-    print('密钥random_numbers', random_numbers)
-    print('密钥m', n)
-    print('密钥p', p)
-    print('密钥q', q)
-    print('++++++++++私钥++++++++++')
-    print('密钥Deta', Deta)
-    print('密钥A', A)
-    print('密钥B', B)
-    print('密钥q', q)
-
-
-    print('未加密的明文是', plaintext1)
-    print('未加密的明文是', plaintext2)
-    print('未加密的明文是', plaintext3)
-    print('未加密的明文是', plaintext4)
-
-    ciphertext1 = lattice_encryption(plaintext1, Mhard, Msoft,random_numbers, N,n, p)
-    print("加密的密文是:", ciphertext1)
-    plaintext1 = lattice_decryption(ciphertext1, Deta, A, B, N, p, q)
-    print("解密的明文是:", plaintext1)
-    print("原始明文是", two_to_long(plaintext1, N))
-
-    ciphertext2 = lattice_encryption(plaintext2, Mhard, Msoft,random_numbers, N,n, p)
-    print("加密的密文是:", ciphertext2)
-    plaintext2 = lattice_decryption(ciphertext2, Deta, A, B, N, p, q)
-    print("解密的明文是:", plaintext2)
-    print("原始明文是", two_to_long(plaintext2, N))
-
-    ciphertext3 = lattice_encryption(plaintext3, Mhard, Msoft,random_numbers, N,n, p)
-    print("加密的密文是:", ciphertext3)
-    plaintext3 = lattice_decryption(ciphertext3, Deta, A, B, N, p, q)
-    print("解密的明文是:", plaintext3)
-
-    ciphertext4 = lattice_encryption(plaintext4, Mhard, Msoft,random_numbers, N,n, p)
-    print("加密的密文是:", ciphertext4)
-    plaintext4 = lattice_decryption(ciphertext4, Deta, A, B, N, p, q)
-    print("解密的明文是:", plaintext4)
-
-    ######同态调试
-    print("明文和为",plaintextnum3+plaintextnum4)
-    sum = plaintextnum3 + plaintextnum4
-    sum_plaintext = long_to_two(sum,N)
-    sum_ciphertext = lattice_encryption(sum_plaintext, Mhard, Msoft, random_numbers, N, n, p)
-    print("明文3和4之和的密文是:", sum_ciphertext)
-    sum_plaintext = lattice_decryption(sum_ciphertext, Deta, A, B, N, p, q)
-    print("其解密的明文是:", sum_plaintext)
-
-
-    sum_plaintext = lattice_decryption(MatrixAdd(ciphertext3,ciphertext4,1,2*N,p), Deta, A, B, N, p, q)
-    #进位一次
-    sum_plaintext = jiemijinwei(sum_plaintext,r)
-    print("密文3和4之和解密的明文是:",sum_plaintext )
-    print("密文3和4之和解密的明文是:", two_to_long(sum_plaintext,N))
+# if __name__ == "__main__":
+#     N, l, Mhard, Msoft, random_numbers, p, Deta, A, B, q, n, sigema_max, l_0, sigma, r = key_generartion()#密钥生成
+#     #N,l,Mhard,Msoft,random_numbers,p是公钥
+#     # Deta, A, B, N, q是私钥
+#
+#     #print("q=",q)
+#     #print("sigma=",p-q*r*(2*l+1))
+#     #print("l_0=", l_0)
+#
+#
+#
+#     # 数据输入测试模块
+#     plaintextnum1 = 263087#420
+#     plaintextnum2 = 9871
+#     plaintextnum3 = 101
+#     plaintextnum4 = 592
+#
+#     plaintext1 = long_to_two(plaintextnum1,N)
+#     plaintext2 = long_to_two(plaintextnum2,N)
+#     plaintext3 = long_to_two(plaintextnum3,N)
+#     plaintext4 = long_to_two(plaintextnum4,N)
+#     print('++++++++++公钥++++++++++')
+#     print('密钥N', N)
+#     print('密钥Mhard', Mhard)
+#     print('密钥Msoft', Msoft)
+#     print('密钥random_numbers', random_numbers)
+#     print('密钥m', n)
+#     print('密钥p', p)
+#     print('密钥q', q)
+#     print('++++++++++私钥++++++++++')
+#     print('密钥Deta', Deta)
+#     print('密钥A', A)
+#     print('密钥B', B)
+#     print('密钥q', q)
+#
+#
+#     print('未加密的明文是', plaintext1)
+#     print('未加密的明文是', plaintext2)
+#     print('未加密的明文是', plaintext3)
+#     print('未加密的明文是', plaintext4)
+#
+#     ciphertext1 = lattice_encryption(plaintext1, Mhard, Msoft,random_numbers, N,n, p)
+#     print("加密的密文是:", ciphertext1)
+#     plaintext1 = lattice_decryption(ciphertext1, Deta, A, B, N, p, q)
+#     print("解密的明文是:", plaintext1)
+#     print("原始明文是", two_to_long(plaintext1, N))
+#
+#     ciphertext2 = lattice_encryption(plaintext2, Mhard, Msoft,random_numbers, N,n, p)
+#     print("加密的密文是:", ciphertext2)
+#     plaintext2 = lattice_decryption(ciphertext2, Deta, A, B, N, p, q)
+#     print("解密的明文是:", plaintext2)
+#     print("原始明文是", two_to_long(plaintext2, N))
+#
+#     ciphertext3 = lattice_encryption(plaintext3, Mhard, Msoft,random_numbers, N,n, p)
+#     print("加密的密文是:", ciphertext3)
+#     plaintext3 = lattice_decryption(ciphertext3, Deta, A, B, N, p, q)
+#     print("解密的明文是:", plaintext3)
+#
+#     ciphertext4 = lattice_encryption(plaintext4, Mhard, Msoft,random_numbers, N,n, p)
+#     print("加密的密文是:", ciphertext4)
+#     plaintext4 = lattice_decryption(ciphertext4, Deta, A, B, N, p, q)
+#     print("解密的明文是:", plaintext4)
+#
+#     ######同态调试
+#     print("明文和为",plaintextnum3+plaintextnum4)
+#     sum = plaintextnum3 + plaintextnum4
+#     sum_plaintext = long_to_two(sum,N)
+#     sum_ciphertext = lattice_encryption(sum_plaintext, Mhard, Msoft, random_numbers, N, n, p)
+#     print("明文3和4之和的密文是:", sum_ciphertext)
+#     sum_plaintext = lattice_decryption(sum_ciphertext, Deta, A, B, N, p, q)
+#     print("其解密的明文是:", sum_plaintext)
+#
+#
+#     sum_plaintext = lattice_decryption(MatrixAdd(ciphertext3,ciphertext4,1,2*N,p), Deta, A, B, N, p, q)
+#     #进位一次
+#     sum_plaintext = jiemijinwei(sum_plaintext,r)
+#     print("密文3和4之和解密的明文是:",sum_plaintext )
+#     print("密文3和4之和解密的明文是:", two_to_long(sum_plaintext,N))

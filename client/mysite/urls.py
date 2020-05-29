@@ -21,7 +21,9 @@ from myapp import views
 urlpatterns = [
     # path('', views.index),
     path('admin/', admin.site.urls),
-    path('apis/renew_HLP_privateKey', views.renew_HLP_privateKey),  # 更新私钥
+    path('apis/renew_HLP_privateKey', views.renew_HLP_privateKey),  # 更新HLP私钥
+    path('apis/renew_HLP_other_privateKey', views.renew_HLP_other_privateKey),  # 更新HLP_other私钥
+    path('apis/renew_Paillier_privateKey', views.renew_Paillier_privateKey),  # 更新Paillier私钥
     path('apis/get_info', views.get_info),  # 提供数据接口
     path('apis/add', views.add_data),  # 添加数据
     path('apis/change_data', views.change_data),    # 修改数据

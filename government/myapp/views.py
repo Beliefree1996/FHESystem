@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from .models import HLPPublicKey, Cateory, Content, GetNum, Wage, UserIC
+from .models import HLPPublicKey, HLP_otherPublicKey, PaillierPublicKey, En_Algorithm, Cateory, Content, GetNum, Wage, \
+    UserIC
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 # from django.utils.six import BytesIO
@@ -13,101 +14,42 @@ import psutil
 import hashlib
 from PIL import Image, ImageDraw
 import base64
+from . import paillier
 from . import CC_getongtaiN as HLP
-# from . import NCC_getongtai2N
+from . import NCC_getongtai2N as HLP_other
+
 
 # Create your views here.
 
-def renew_HLP_publicKey(request):
+def renew_publicKey(request):
     # Key - Global variables
-    N, l, Mhard, Msoft, random_numbers, mods, Deta, A, B, q, ns, sigema_max, l_0, sigma, r = HLP.key_generartion()  # 密钥生成
-    puk = HLPPublicKey(N=N, ns=ns, mods=mods, Mhard=Mhard, Msoft=Msoft, random_numbers=random_numbers)
-    puk.save()
-    url = 'http://127.0.0.1:8000/apis/renew_HLP_privateKey'
-    data = {'Deta': str(Deta), 'A': str(A), 'B': str(B), 'N': N, 'mods': mods, 'q': q}
-    requests.post(url, data=data)
+    enalth = En_Algorithm.objects.last()
+    if enalth.normal == 1 or enalth.plus == 1 or enalth.multiply == 1:  # paillier
+        n, g, r, lamda, u = paillier.paillier_generation()
+        puk1 = PaillierPublicKey(n=n, r=r)
+        puk1.save()
+        url = 'http://127.0.0.1:8000/apis/renew_Paillier_privateKey'
+        data = {'g': g, 'lamda': lamda, 'n': n, 'u': u}
+        requests.post(url, data=data)
+    elif enalth.normal == 2 or enalth.plus == 2 or enalth.multiply == 2:  # HLP
+        N, l, Mhard, Msoft, random_numbers, mods, Deta, A, B, q, ns, sigema_max, l_0, sigma, r = HLP.key_generartion()  # 密钥生成
+        puk2 = HLPPublicKey(N=N, ns=ns, mods=mods, Mhard=Mhard, Msoft=Msoft, random_numbers=random_numbers)
+        puk2.save()
+        url = 'http://127.0.0.1:8000/apis/renew_HLP_privateKey'
+        data = {'Deta': str(Deta), 'A': str(A), 'B': str(B), 'N': N, 'mods': mods, 'q': q}
+        requests.post(url, data=data)
+    elif enalth.normal == 3 or enalth.plus == 3 or enalth.multiply == 3:  # HLP_other
+        N, l, Mhard, Msoft, random_numbers, mods, Deta, A, B, q, ns, sigema_max, l_0, sigma, r = HLP_other.key_generartion()  # 密钥生成
+        puk3 = HLP_otherPublicKey(N=N, ns=ns, mods=mods, Mhard=Mhard, Msoft=Msoft, random_numbers=random_numbers)
+        puk3.save()
+        url = 'http://127.0.0.1:8000/apis/renew_HLP_other_privateKey'
+        data = {'Deta': str(Deta), 'A': str(A), 'B': str(B), 'N': N, 'mods': mods, 'q': q}
+        requests.post(url, data=data)
     return JsonResponse({
         "status_code": 0,
         "data": "renew success!"
     })
 
-# 字符串转二维矩阵
-def strtoM2(str):
-    arr = []
-    count = 0
-    num = 0
-    for i in str:
-        try:
-            num = num * 10 + int(i)
-        except:
-            if i == '[':
-                count += 1
-            elif i == ',':
-                arr.append(num)
-                num = 0
-            pass
-
-    cols = int(len(arr) / count)
-    grid = []
-    cur = []
-    for i in arr:
-        if len(cur) <= cols:
-            cur.append(i)
-        else:
-            grid.append(cur)
-            cur = []
-            cur.append(i)
-    grid.append(cur)
-
-    return grid
-
-# 字符串转三维矩阵
-def strtoM3(str):
-    arr = []
-    count1 = 0
-    count2 = 0
-    type = 0
-    num = 0
-    for i in str:
-        try:
-            num = num * 10 + int(i)
-        except:
-            if i == '[':
-                type += 1
-                if type == 2:
-                    count1 += 1
-                elif type == 3:
-                    count2 += 1
-            elif i == ']':
-                type -= 1
-            elif i == ',':
-                arr.append(num)
-                num = 0
-            pass
-    arr.append(num)
-    cols1 = int(len(arr) / count1)
-    cols2 = int(len(arr) / count2)
-    shuzu = []
-    grid = []
-    cur = []
-    for i in arr:
-        if len(cur) < cols2:
-            cur.append(i)
-        elif len(grid) * cols2 < cols1:
-            grid.append(cur)
-            cur = []
-            cur.append(i)
-        else:
-            shuzu.append(grid)
-            grid = []
-            grid.append(cur)
-            cur = []
-            cur.append(i)
-    shuzu.append(grid)
-    grid = []
-    grid.append(cur)
-    shuzu.append(grid)
-    return shuzu
 
 # /apis/get_info
 def get_info(request):
@@ -131,8 +73,6 @@ def get_info(request):
         get_date = request.GET.get("date")
         get_user_detail = request.GET.get("user_detail")
         get_username = request.GET.get("username")
-
-
 
         # 页码
         if get_page_arr is not None:
@@ -189,18 +129,34 @@ def get_info(request):
                 db_data = Wage.objects.filter(IC_num=user_ic.IC_num, date=get_date)
             else:
                 db_data = Wage.objects.filter(IC_num=user_ic.IC_num).order_by("date").reverse()[:6]
-            puk = HLPPublicKey.objects.last()
-            data = [
-                {
-                    "id": data_i.id,
-                    "date": data_i.date,
-                    "pf": HLP.lattice_encryption(HLP.long_to_two(data_i.pf * 100, puk.N), eval(str(puk.Mhard)), eval(str(puk.Msoft)), eval(str(puk.random_numbers)), puk.N, puk.ns, puk.mods),
-                    "ss": HLP.lattice_encryption(HLP.long_to_two(data_i.ss * 100, puk.N), eval(str(puk.Mhard)), eval(str(puk.Msoft)), eval(str(puk.random_numbers)), puk.N, puk.ns, puk.mods),
-                }
-                for data_i in db_data]
-
+            enalg = En_Algorithm.objects.last()
+            if enalg.normal == 1:
+                puk = PaillierPublicKey.objects.last()
+                data = [
+                    {
+                        "id": data_i.id,
+                        "date": data_i.date,
+                        "pf": paillier.paillier_encryption(data_i.pf * 100, int(puk.n)+1, int(puk.r), int(puk.n)),
+                        "ss": paillier.paillier_encryption(data_i.ss * 100, int(puk.n)+1, int(puk.r), int(puk.n)),
+                    }
+                    for data_i in db_data]
+            elif enalg.normal == 2:
+                puk = HLPPublicKey.objects.last()
+                data = [
+                    {
+                        "id": data_i.id,
+                        "date": data_i.date,
+                        "pf": HLP.lattice_encryption(HLP.long_to_two(data_i.pf * 100, puk.N), eval(str(puk.Mhard)),
+                                                     eval(str(puk.Msoft)), eval(str(puk.random_numbers)), puk.N, puk.ns,
+                                                     puk.mods),
+                        "ss": HLP.lattice_encryption(HLP.long_to_two(data_i.ss * 100, puk.N), eval(str(puk.Mhard)),
+                                                     eval(str(puk.Msoft)), eval(str(puk.random_numbers)), puk.N, puk.ns,
+                                                     puk.mods),
+                    }
+                    for data_i in db_data]
             return JsonResponse({
                 "status_code": 0,
+                "enalg": enalg.normal,
                 "data": data
             })
 

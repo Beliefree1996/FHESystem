@@ -82,3 +82,31 @@ class HLPPrivatecKey(models.Model):
 
     class Meta:
         verbose_name_plural = "HLP私钥"
+
+class HLP_otherPrivatecKey(models.Model):
+    id = models.AutoField(primary_key=True)
+    Deta = models.TextField()
+    A = models.TextField()
+    B = models.TextField()
+    N = models.IntegerField()
+    mods = models.IntegerField()
+    q = models.IntegerField()
+
+    def __str__(self):
+        return self.id
+
+    class Meta:
+        verbose_name_plural = "HLP_other私钥"
+
+class PaillierPrivatecKey(models.Model):
+    id = models.AutoField(primary_key=True)
+    g = models.TextField()
+    lamda = models.TextField()
+    n = models.TextField()
+    u = models.TextField()
+
+    def __str__(self):
+        return self.id
+
+    class Meta:
+        verbose_name_plural = "Paillier私钥"

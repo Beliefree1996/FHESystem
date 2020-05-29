@@ -68,6 +68,18 @@ class UserIC(models.Model):
     class Meta:
         verbose_name_plural = "用户身份信息"
 
+class En_Algorithm(models.Model):
+    id = models.AutoField(primary_key=True)
+    normal = models.IntegerField()
+    plus = models.IntegerField()
+    multiply = models.IntegerField()
+
+    def __str__(self):
+        return self.id
+
+    class Meta:
+        verbose_name_plural = "当前密钥"
+
 class HLPPublicKey(models.Model):
     id = models.AutoField(primary_key=True)
     N = models.IntegerField()
@@ -82,3 +94,29 @@ class HLPPublicKey(models.Model):
 
     class Meta:
         verbose_name_plural = "HLP公钥"
+
+class HLP_otherPublicKey(models.Model):
+    id = models.AutoField(primary_key=True)
+    N = models.IntegerField()
+    ns = models.IntegerField()
+    mods = models.IntegerField()
+    Mhard = models.TextField()
+    Msoft = models.TextField()
+    random_numbers = models.TextField()
+
+    def __str__(self):
+        return self.id
+
+    class Meta:
+        verbose_name_plural = "HLP_other公钥"
+
+class PaillierPublicKey(models.Model):
+    id = models.AutoField(primary_key=True)
+    r = models.TextField()
+    n = models.TextField()
+
+    def __str__(self):
+        return self.id
+
+    class Meta:
+        verbose_name_plural = "Paillier公钥"
