@@ -11,7 +11,7 @@
         </div>
         <el-row>
           <el-card style="margin-top:20px; margin-bottom: 20px">
-            <el-button type="primary">点击更新</el-button>
+            <el-button type="primary" @click="renewKey">点击更新</el-button>
             <font size="2" color="red">建议定期更新！</font>
           </el-card>
         </el-row>
@@ -24,20 +24,45 @@
         <el-row>
           <el-card style="margin-top:20px; margin-bottom: 20px">
             <el-form-item label="额度计算公式" prop="title" required>
-              <el-input type="text" v-model="blog.title" placeholder="Math.max(Math.min(Math.max(A * 0.8，B * 15) * 10，150000)，50000)" clearable></el-input>
+              <el-input type="text" v-model="blog.title"
+                        placeholder="Math.max(Math.min(Math.max(A * 0.8，B * 15) * 10，150000)，50000)"
+                        clearable></el-input>
             </el-form-item>
 
             <div class="form-group">
               <!--        row分栏-->
               <el-row>
-                <el-col :span="12">
-                  <el-form-item label="加密算法" prop="cateory" required>
-                    <el-select v-model="blog.cateory" placeholder="请选择">
-                      <el-option v-for="cateory in cateorys" v-cloak :key="cateory" :value="cateory"></el-option>
+                <el-col :span="8">
+                  <el-form-item label="数据加密算法" required>
+                    <el-select v-model="blog.cateory_normal" placeholder="请选择">
+                      <el-option label="Paillier" value="1"></el-option>
+                      <el-option label="BLP" value="2"></el-option>
+                      <el-option label="BLP_other" value="3"></el-option>
+                      <el-option label="BFV" value="4"></el-option>
+                      <el-option label="CKKS" value="5"></el-option>
                     </el-select>
                   </el-form-item>
                 </el-col>
-
+                <el-col :span="8">
+                  <el-form-item label="加法加密算法" prop="cateory_normal">
+                    <el-select v-model="blog.cateory_plus" placeholder="请选择">
+                      <el-option label="Paillier" value="1"></el-option>
+                      <el-option label="BLP" value="2"></el-option>
+                      <el-option label="BLP_other" value="3"></el-option>
+                      <el-option label="BFV" value="4"></el-option>
+                      <el-option label="CKKS" value="5"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="乘法加密算法" prop="cateory_normal">
+                    <el-select v-model="blog.cateory_multiply" placeholder="请选择">
+                      <el-option label="BFV" value=1></el-option>
+                      <el-option label="CKKS" value=2></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <!--                <el-row>-->
                 <el-col :span="12">
                   <el-form-item label="发布者" prop="author" required>
                     <el-select v-model="blog.author" placeholder="请选择">
@@ -45,6 +70,7 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
+                <!--                </el-row>-->
 
               </el-row>
             </div>
@@ -91,11 +117,14 @@
         blog: {
           title: 'Math.max(Math.min(Math.max(A * 0.8，B * 15) * 10，150000)，50000)',
           content: null,
-          cateory: null,
+          // 初始化分类列表数据
+          cateory_normal: '1',
+          cateory_plus: '1',
+          cateory_multiply: '1',
           author: null
         },
-        // 初始化分类列表数据
-        cateorys: ['DGHV', 'Paillier', 'Brakerski'],
+        // cateorys_plus: ['Paillier', 'BLP', 'BLP_other'],
+        // cateorys_multiply: ['Paillier', 'BLP', 'BLP_other', 'BFV', 'CKKS'],
         // 初始化用户数据
         users: '',
         // 表单是否被提交
@@ -107,7 +136,9 @@
         rules: {
           title: [{required: true, message: '这是必填的!', trigger: 'blur'}],
           content: [{required: true, message: '这是必填的!', trigger: 'blur'}],
-          cateory: [{required: true, message: '这是必填的!', trigger: 'blur'}],
+          cateory_normal: [{required: true, message: '这是必填的!', trigger: 'blur'}],
+          cateory_plus: [{required: true, message: '这是必填的!', trigger: 'blur'}],
+          cateory_multiply: [{required: true, message: '这是必填的!', trigger: 'blur'}],
           author: [{required: true, message: '这是必填的!', trigger: 'blur'}]
         }
       }
@@ -117,6 +148,7 @@
       submitform: function (submitForm) {
         this.$refs[submitForm].validate((valid) => {
           if (valid) {
+            this.visible = false
             // this.issubmitd = true
             // this.$http.post('apis/add?add_data=1bs2ppJu2I9dl1&aa=33&kk=33', this.blog)
             //   .then(response => {
@@ -131,7 +163,16 @@
             })
           }
         })
-
+      },
+      renewKey: function () {
+        this.$axios.get('opens/renew_publicKey')
+        .then(response => {
+          if (response.data.status_code == 0){
+            this.$message.success("更新成功！")
+          }else{
+            this.$message.error("网络错误，更新失败！")
+          }
+        })
       },
       resetform: function () {
         this.blog = {
